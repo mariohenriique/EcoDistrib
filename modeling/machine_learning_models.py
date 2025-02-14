@@ -15,6 +15,7 @@ from EcoDistrib.modeling import ModelDataPrepare
 class MLModeling:
     def __init__(self):
         self.logger = msg_logger
+        self.model_type = None
 
     def sdm_svm(
             self,
@@ -66,6 +67,7 @@ class MLModeling:
         - prediction_map (np.ndarray): 
             Mapa resultante com as previsões do modelo SVM.
         """
+        self.model_type = 'SVM'
         try:
             # Verificar e criar a coluna de presença, se necessário
             if presence_col not in occurrence_data.columns:
@@ -275,6 +277,7 @@ class MLModeling:
         Logs:
         - Informações e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'RandomForest'
         try:
             # Verificar e criar coluna de presença, se necessário
             if presence_col not in occurrence_data.columns:
@@ -391,6 +394,7 @@ class MLModeling:
         Logs:
         - Informações e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'ANN'
         try:
             # Verificar e criar a coluna de presença, se necessário
             if presence_col not in occurrence_data.columns:

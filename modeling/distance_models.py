@@ -13,6 +13,7 @@ from EcoDistrib.common import msg_logger
 class DistanceModeling:
     def __init__(self):
         self.logger = msg_logger
+        self.model_type = None
 
     def sdm_bioclim(
             self,
@@ -49,6 +50,7 @@ class DistanceModeling:
         - Informações de progresso, como carregamento de dados e sucesso do processamento.
         - Erros críticos, como arquivos TIFF ausentes ou dados inválidos.
         """
+        self.model_type = 'Bioclim'
         try:
             # Validar e carregar os arquivos TIFF
             tiff_files = FileManager().listfile(tiff_paths)
@@ -163,6 +165,7 @@ class DistanceModeling:
         Logs:
         - Informações de progresso e possíveis erros durante o processamento.
         """
+        self.model_type = 'Mahalanobis'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col,formato)
@@ -248,6 +251,7 @@ class DistanceModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'Manhattan'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col,formato)
@@ -324,6 +328,7 @@ class DistanceModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'Euclidean'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col, formato)
@@ -407,6 +412,7 @@ class DistanceModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'Canberra'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col, formato)
@@ -488,6 +494,7 @@ class DistanceModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'Chebyshev'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col, formato)
@@ -571,6 +578,7 @@ class DistanceModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'Cosseno'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col, formato)
@@ -657,6 +665,7 @@ class DistanceModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'Minkowski'
         try:
             # Preparar os dados dos rasters
             matriz, raster_values, profile = ModelDataPrepare().prepare_raster_data(tiff_paths, occurrence_data, lat_col, lon_col, formato)

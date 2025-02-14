@@ -131,7 +131,8 @@ class ModelDataPrepare:
             n_pseudo_ausencias=None, 
             lat_col='decimalLatitude', 
             lon_col='decimalLongitude', 
-            presence_col='presence'
+            presence_col='presence',
+            save_path=None
         ):
         """
         Gera pontos de pseudo-ausência aleatoriamente dentro dos limites do raster.
@@ -149,6 +150,8 @@ class ModelDataPrepare:
             Nome da coluna com a longitude no DataFrame (padrão: 'decimalLongitude').
         - presence_col (str, opcional): 
             Nome da coluna indicando presença ou ausência (padrão: 'presence').
+         - save_path (str, opcional):
+            Caminho para salvar o DataFrame gerado. Se não fornecido, o DataFrame não será salvo.
 
         Retorno:
         - pd.DataFrame: 
@@ -202,6 +205,16 @@ class ModelDataPrepare:
             pseudo_ausencia_df[presence_col] = 0  # Marcar como ausência
 
             self.logger.info(f"Pseudo-ausências geradas com sucesso: {len(pseudo_ausencias)} pontos.")
+
+            # Salvar o DataFrame se save_path for fornecido
+            if save_path:
+                try:
+                    pseudo_ausencia_df.to_csv(save_path, index=False)
+                    self.logger.info(f"DataFrame salvo com sucesso em: {save_path}")
+                except Exception as e:
+                    self.logger.error(f"Erro ao salvar o DataFrame: {e}")
+                    raise
+
             return pseudo_ausencia_df
 
         except ValueError as ve:

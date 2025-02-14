@@ -12,6 +12,7 @@ from EcoDistrib.modeling import ModelDataPrepare
 class StatisticalModeling:
     def __init__(self):
         self.logger = msg_logger
+        self.model_type = None
 
     def sdm_gam(
             self,
@@ -51,6 +52,7 @@ class StatisticalModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'GAM'
         try:
             # Verificar se a coluna de presença está presente no DataFrame
             if presence_col not in occurrence_data.columns:
@@ -150,6 +152,7 @@ class StatisticalModeling:
         Logs:
         - Mensagens de progresso e erros são registrados usando `self.logger`.
         """
+        self.model_type = 'GLM'
         try:
             # Verificar se a coluna de presença existe no DataFrame
             if presence_col not in occurrence_data.columns:
