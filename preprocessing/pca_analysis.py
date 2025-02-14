@@ -29,7 +29,7 @@ class PCAProcessor:
             os.makedirs(output_folder, exist_ok=True)
 
             # 1. Listar arquivos TIFF no diretório de entrada
-            tiff_paths = FileManager.listfile(input_folder)
+            tiff_paths = FileManager().listfile(input_folder)
             if not tiff_paths:
                 raise ValueError(f"Nenhum arquivo TIFF encontrado no diretório: {input_folder}")
 
@@ -64,6 +64,12 @@ class PCAProcessor:
             # 4. Aplicar PCA
             pca = PCA(n_components=n_components)
             transformed_data = pca.fit_transform(matriz_sem_nan.T)  # Transpor para amostras como linhas
+
+            # Obter os vetores de carga (loadings)
+            loadings = pca.components_.T  # Transpor para formato adequado
+
+            # Salvar os vetores de carga em um arquivo CSV ou NPY
+            np.savetxt(os.path.join(output_folder, 'pca_loadings.csv'), loadings, delimiter=',')
 
             # 5. Criar uma matriz para armazenar os componentes principais
             _, profile = MapGenerator().create_synthetic_raster(raster_shape=(height, width))

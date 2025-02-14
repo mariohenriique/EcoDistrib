@@ -42,7 +42,8 @@ class CorrelationAnalyzer:
             self.logger.info(f"Matriz de correlação calculada com o método {method}.")
             
             # Filtra as variáveis com alta correlação
-            corr_matrix, variables = self.filter_correlation(corr_matrix, variables, threshold)
+            resultados = [var.split('_')[2] + '_' + var.split('_')[3] for var in variables]
+            corr_matrix, variables = self.filter_correlation(corr_matrix, resultados, threshold)
             self.logger.info(f"Variáveis filtradas. Restam {len(variables)} variáveis após aplicar o threshold {threshold}.")
 
             # Exibe e salva o heatmap
@@ -168,10 +169,6 @@ class CorrelationAnalyzer:
         plt.xlabel('Variáveis', fontsize=12)
         plt.ylabel('Variáveis', fontsize=12)
 
-        # Exibir o heatmap
-        if show:
-            plt.show()
-
         # Salvar o gráfico como imagem, se solicitado
         if save_as:
             try:
@@ -179,6 +176,10 @@ class CorrelationAnalyzer:
                 print(f"Heatmap salvo como: {save_as}")
             except Exception as e:
                 print(f"Erro ao salvar o heatmap: {e}")
+
+        # Exibir o heatmap
+        if show:
+            plt.show()
 
     def filter_correlation(self, corr_matrix, variables, threshold=0.75):
         """

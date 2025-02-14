@@ -309,7 +309,7 @@ class RasterOperations:
         - ValueError: Se nenhum raster válido for encontrado.
         """
         # Lista os arquivos TIFF no caminho fornecido
-        tiff_paths = FileManager.listfile(tiff_paths)
+        tiff_paths = FileManager().listfile(tiff_paths)
 
         # Inicializa listas para armazenar os dados e nomes das variáveis
         rasters_data = []
