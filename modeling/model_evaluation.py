@@ -1,6 +1,8 @@
 import os
 import numpy as np
 from sklearn.metrics import roc_auc_score, confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.utils import resample
+from sklearn.model_selection import KFold
 
 from EcoDistrib.outputs import MapGenerator
 from EcoDistrib.modeling import ModelDataPrepare
@@ -74,6 +76,7 @@ class ModelEvaluator:
         
         metrics = {
             'model':self.model_name,
+            'background':n_background,
             'auc_roc': auc_roc,
             'acuracia': accuracy_score(y_true, y_pred),
             'precisao': precision_score(y_true, y_pred),
@@ -132,3 +135,45 @@ class ModelEvaluator:
         except Exception as e:
             self.logger.error(f"Falha ao salvar métricas: {e}")
             raise
+
+    def bootstrap_validation(self, n_iterations=100):
+        """
+        Realiza validação do modelo via Bootstrap.
+
+        Parâmetros:
+        - n_iterations (int): Número de reamostragens a serem feitas.
+
+        Retorno:
+        - mean_score (float): Média das previsões sobre todas as iterações.
+        - std_score (float): Desvio padrão das previsões.
+        """
+        scores = []
+        for _ in range(n_iterations):
+            sample = resample(self.occurrence_data)  # Amostragem com reposição
+            predictions = self.model.sdm_bioclim(sample, self.tiff_paths, self.lat_col, self.lon_col)
+            scores.append(np.mean(predictions))
+
+        return np.mean(scores), np.std(scores)
+
+    def cross_validation(self, n_splits=5):
+        """
+        Realiza validação via K-Fold Cross-Validation.
+
+        Parâmetros:
+        - n_splits (int): Número de divisões para a validação.
+
+        Retorno:
+        - mean_score (float): Média das previsões nas divisões.
+        - std_score (float): Desvio padrão das previsões.
+        """
+        kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
+        scores = []
+
+        for train_index, test_index in kf.split(self.occurrence_data):
+            train_data = self.occurrence_data.iloc[train_index]
+            test_data = self.occurrence_data.iloc[test_index]
+
+            predictions = self.model.sdm_bioclim(train_data, self.tiff_paths, self.lat_col, self.lon_col)
+            scores.append(np.mean(predictions))
+
+        return np.mean(scores), np.std(scores)
